@@ -1,23 +1,20 @@
-const express = require("express");
-const cors = require('cors');
+import express from 'express';
+import productRouter from "../src/routers/product"
+import morgan from 'morgan';
+import cors from 'cors';
+
 const app = express();
 const PORT = 3001;
 app.use(cors());
-app.get("/",(req,res) =>{
-    res.send("<h1>Home Page</h1>")
-})
-app.get("/api/products" ,(req,res) =>{
-    const data = [
-                    {id: 1 , name : "Product1"},
-                    {id: 2 , name : "Product2"}
-                ];
-    res.json(data)
-})
-app.get("/user",() =>{
 
-})
+app.use(morgan('tiny'))
+app.use(express.json())
+
+app.use("/api",productRouter)
+
+
 app.listen(PORT,() =>{
-    console.log("Bạn đang chạy cổng",PORT);
+    console.log("Server is running port :",PORT);
 })
 
 // const http = require('http');

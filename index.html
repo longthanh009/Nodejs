@@ -10,7 +10,12 @@
     <script>
         async function getProducts() {
             const response = await fetch("http://localhost:3001/api/products");
-            const data = await response.json()
+            const data = await response.json();
+            let eLement = document.createElement("ul");
+            data.forEach(item => {
+                eLement.innerHTML += `<li>${item.name}</li>`
+            });
+            document.body.appendChild(eLement)
         }
         getProducts();
     </script>
