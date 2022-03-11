@@ -6,7 +6,7 @@ export const List = (rep, res) => {
     res.json(data);
 };
 export const Get = (req, res) => {
-    res.json(data.find(item => item.id === req.params.id));
+    res.json(data.find(item => item.id === +req.params.id));
 };
 export const Upload = (req, res) => {
     data.push(req.body);
@@ -14,9 +14,9 @@ export const Upload = (req, res) => {
     res.json(data)
 };
 export const Delete = (req, res) => {
-    res.json(data.filter(item => item.id !== req.params.id));
+    res.json(data.filter(item => item.id !== +req.params.id));
 };
 export const Update = (req, res) => {
-    const result = data.map(item => item.id === req.params.id ? req.body : item);
-    res.json(data.filter(item => item.id !== req.params.id));
+    const result = data.map(item => item.id === +req.params.id ? req.body : item);
+    res.json(data.filter(item => item.id !== +req.params.id));
 };
