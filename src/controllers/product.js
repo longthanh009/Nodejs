@@ -1,22 +1,60 @@
-var data = [
-    { id: 1, name: "Product1" },
-    { id: 2, name: "Product2" }
-];
-export const List = (rep, res) => {
-    res.json(data);
+import mongoose from "mongoose";
+
+const Products = mongoose.model('Products',{name: String})
+
+export const Created = async (req,res) =>{
+    try {
+        const product = await new Products(req.body).save();
+        res.json(product);
+    } catch (error) {
+        res.status("400").json({
+            error : "Lỗi không thêm được sản phẩm"
+        })
+    }
 };
-export const Get = (req, res) => {
-    res.json(data.find(item => item.id === +req.params.id));
+export const List = async (req, res) => {
+    try {
+        const listPro = await Products.find().exec();
+        res.json(listPro);
+    } catch (error) {
+        res.status("400").json({
+            error : "Lỗi không lấy được sản phẩm"
+        })
+    }
 };
-export const Upload = (req, res) => {
-    data.push(req.body);
-    console.log(data);
-    res.json(data)
+export const Get = async (req, res) => {
+    try {
+        const pro = await Products.findOne({
+            _id : req.params.id
+        }).exec();
+        res.json(pro);
+    } catch (error) {
+        res.status("400").json({
+            error : "Lỗi không lấy được sản phẩm"
+        })
+    }
 };
-export const Delete = (req, res) => {
-    res.json(data.filter(item => item.id !== +req.params.id));
+export const Delete = async (req, res) => {
+    try {
+        await Products.deleteOne({
+            _id : req.params.id
+        }).exec();
+        console.log("Xoá sản phẩm thành công")
+    } catch (error) {
+        res.status("400").json({
+            error : "Lỗi không xoá được sản phẩm"
+        })
+    }
 };
-export const Update = (req, res) => {
-    const result = data.map(item => item.id === +req.params.id ? req.body : item);
-    res.json(data.filter(item => item.id !== +req.params.id));
+export const Update = async (req, res) => {
+    try {
+        const pro= await Products.updateOne({
+            _id : req.params.id
+        },{name : req.body.name}).orFail();
+        res.json(pro);
+    } catch (error) {
+        res.status("400").json({
+            error : "Lỗi không lấy được sản phẩm"
+        })
+    }
 };
