@@ -1,10 +1,8 @@
-import mongoose from "mongoose";
-
-const Products = mongoose.model('Products',{name: String})
+import Product from "../models/product";
 
 export const Created = async (req,res) =>{
     try {
-        const product = await new Products(req.body).save();
+        const product = await new Product(req.body).save();
         res.json(product);
     } catch (error) {
         res.status("400").json({
@@ -14,7 +12,7 @@ export const Created = async (req,res) =>{
 };
 export const List = async (req, res) => {
     try {
-        const listPro = await Products.find().exec();
+        const listPro = await Product.find().exec();
         res.json(listPro);
     } catch (error) {
         res.status("400").json({
@@ -24,7 +22,7 @@ export const List = async (req, res) => {
 };
 export const Get = async (req, res) => {
     try {
-        const pro = await Products.findOne({
+        const pro = await Product.findOne({
             _id : req.params.id
         }).exec();
         res.json(pro);
@@ -36,7 +34,7 @@ export const Get = async (req, res) => {
 };
 export const Delete = async (req, res) => {
     try {
-        await Products.deleteOne({
+        await Product.deleteOne({
             _id : req.params.id
         }).exec();
         console.log("Xoá sản phẩm thành công")
@@ -48,9 +46,9 @@ export const Delete = async (req, res) => {
 };
 export const Update = async (req, res) => {
     try {
-        const pro= await Products.updateOne({
+        const pro= await Product.updateOne({
             _id : req.params.id
-        },{name : req.body.name}).orFail();
+        },req.body).orFail();
         res.json(pro);
     } catch (error) {
         res.status("400").json({
