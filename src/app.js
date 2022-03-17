@@ -1,10 +1,13 @@
 import express from 'express';
-import productRouter from "../src/routers/product";
-import userRouter from "../src/routers/user";
-
 import morgan from 'morgan';
 import cors from 'cors';
 import mongoose from "mongoose";
+
+import productRouter from "../src/routers/product";
+import userRouter from "../src/routers/user";
+import categoryRouter from "../src/routers/category";
+
+
 const app = express();
 app.use(cors());
 app.use(morgan('tiny'))
@@ -12,6 +15,7 @@ app.use(express.json())
 
 app.use("/api",productRouter)
 app.use("/api",userRouter)
+app.use("/api",categoryRouter )
 mongoose.connect("mongodb://localhost:27017/we16310")
 .then(() =>{
     console.log("Database Connection Successful");

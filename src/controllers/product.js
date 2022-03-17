@@ -2,8 +2,8 @@ import Product from "../models/product";
 
 export const Created = async (req,res) =>{
     try {
-        const product = await new Product(req.body).save();
-        res.json(product);
+        const cate = await new Product(req.body).save();
+        res.json(cate);
     } catch (error) {
         res.status("400").json({
             error : "Lỗi không thêm được sản phẩm"
