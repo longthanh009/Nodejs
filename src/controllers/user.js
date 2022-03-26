@@ -1,35 +1,71 @@
 import User from "../models/user"
+import jwt from "jsonwebtoken"
 
 export const register = async (req, res) => {
+    const {name,email,password} = req.body
     try {
-        await new User(req.body).save();
+        const exitsUser = await User.findOne({email}).exec()
+        if(exitsUser) {
+            res.status(400).json({
+                message:"Email đã tồn tại"
+            })
+        }
+        const user = await new User({name,email,password}).save()
         res.json({
-            message: "Đăng ký thành công"
+            user: {
+            _id : user._id,
+            name: user.name,
+            email: user.email,
+            password : user.password
+        }
         })
     } catch (error) {
-        res.json({
+        console.log(error)
+        res.status(400).json({
             error: "Lỗi đăng ký"
         })
     }
 };
 export const login = async (req, res) => {
+    const {email , password} = req.body;
     try {
-        const user = await new User.findOne({
-            email: req.body.email
-        });
-        console.log(user)
-        // if (user.password === req.body.password) {
-        //     res.json({
-        //         message: "Đăng nhập thành công"
-        //     })
-        // } else{
-        //     res.json({
-        //         message: "Sai tên tài khoản hoặc mật khẩu"
-        //     })
-        // }
-    } catch (error) {
+        const user = await User.findOne({email});
+        if(!user) {
+            res.json({
+                message: "Email không tồn tại"
+            })
+        }
+        if(!user.authenticate(password)) {
+            res.status(400).json({
+                message: "Mật khẩu không đúng"
+            })
+        }
+        const token = jwt.sign({_id: user._id},"123456",{expiresIn: '1h'})
         res.json({
-            error: "Sai tài khoản hoặc mật khẩu"
+            token,
+            user: {
+                _id : user._id,
+                name: user.name,
+                email: user.email,
+            }
         })
+    } catch (error) {
+        res.status(400).json({
+            message:"Đăng nhập không thành công"
+        })
+    }
+};
+export const userId = async (req,res,next,id) =>{
+    try {
+        const user = await User.findById(id).exec();
+        if(!user) {
+            res.status(401).json({
+                message: "Không tìm thấy user"
+            })
+        }
+        req.profile  = user;
+        req.password = undefined
+    } catch (error) {
+        console.log(error)
     }
 }
