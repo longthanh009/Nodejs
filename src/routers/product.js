@@ -5,7 +5,7 @@ import { userId } from "../controllers/user";
 const router = express.Router();
 
 
-router.get("/products/:userId" ,requirdSigin,isAuth,checkUse,List);
+router.get("/products" ,List);
 router.post("/products/:userId" ,requirdSigin,isAuth,Created);
 router.get("/product/:id" ,checkUse,Get);
 router.delete("/product/:id" ,Delete);

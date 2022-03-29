@@ -2,16 +2,20 @@ import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import mongoose from "mongoose";
-
+import swaggerUi from 'swagger-ui-express';
+import  YAML from 'yamljs';
 import productRouter from "../src/routers/product";
 import userRouter from "../src/routers/user";
 import categoryRouter from "../src/routers/category";
 
 
 const app = express();
+const swaggerJSDocs = YAML.load('./api.yaml');
 app.use(cors());
 app.use(morgan('tiny'))
 app.use(express.json())
+app.use("/api-docs",swaggerUi.serve, swaggerUi.setup(swaggerJSDocs))
+
 
 app.use("/api",productRouter)
 app.use("/api",userRouter)
